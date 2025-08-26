@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  jekyll:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jekyll-studio
+    ports:
+      - "4000:4000"     # Jekyll serve port
+      - "35729:35729"   # LiveReload port
+    volumes:
+      - ./projects:/workspace/projects
+      - ./templates:/workspace/templates
+      - bundle_cache:/workspace/.bundle
+    environment:
+      - JEKYLL_ENV=development
+      - BUNDLE_PATH=/workspace/.bundle
+    stdin_open: true
+    tty: true
+    networks:
+      - jekyll-network
+
+  # Optional: Add a reverse proxy for multiple sites
+  nginx:
+    image: nginx:alpine
+    container_name: jekyll-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./projects:/var/www/html:ro
+    depends_on:
+      - jekyll
+    networks:
+      - jekyll-network
+    profiles:
+      - proxy
+
+volumes:
+  bundle_cache:
+
+networks:
+  jekyll-network:
+    driver: bridge
