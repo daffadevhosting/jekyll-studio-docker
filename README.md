@@ -6,7 +6,7 @@ Docker container dengan Ruby + Jekyll untuk Jekyll Studio webapp. Container ini 
 
 ### 1. Clone dan Setup
 ```bash
-git clone <repository-url>
+git clone https://daffadevhosting/jekyll-studio-docker.git
 cd jekyll-studio-docker
 ```
 
